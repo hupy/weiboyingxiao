@@ -98,6 +98,7 @@
                         <div ng-show="!rowform.$visible" class="buttons">
                             <img ng-src="{{ account.pincodeImageUrl }}" alt="验证码" ng-show="account.showPincode" ng-click="changePincode(account)" class="img-pincode">
                             <input ng-model="account.pincode" class="form-control input-pincode" type="text" placeholder="验证码" maxlength="10" ng-show="account.showPincode" required>
+                            <img ng-src="{{ account.qrimage }}" ng-show="account.qrimage">
                             <button ng-click="loginAccount($index, account)" title="登录" class="btn btn-sm btn-primary">
                                 登录
                             </button>

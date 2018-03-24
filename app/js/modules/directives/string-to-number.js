@@ -1,6 +1,4 @@
 App.directive('stringToNumber', function() {
-    'use strict';
-
     return {
         require: 'ngModel',
         link: function(scope, element, attrs, ngModel) {

@@ -2,12 +2,12 @@
     "node_modules/jquery/dist/jquery.js",
     "node_modules/dexie/dist/dexie.js",
     "node_modules/es6-shim/es6-shim.min.js",
-    "js/background/services/accountservice.js",
-    "js/background/services/chromeservice.js",
-    "js/background/services/customerservice.js",
-    "js/background/services/logservice.js",
-    "js/background/services/sinaservice.js",
-    "js/background/services/taskservice.js",
-    "js/background/sinasdk.js",
-    "js/background/main.js"
+    "app/js/background/services/account.js",
+    "app/js/background/services/chrome.js",
+    "app/js/background/services/customer.js",
+    "app/js/background/services/log.js",
+    "app/js/background/services/sina.js",
+    "app/js/background/services/task.js",
+    "app/js/background/sinasdk.js",
+    "app/js/background/main.js"
 ]

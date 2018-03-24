@@ -1,44 +1,45 @@
-$(function() {
+new Vue({
+  el: '.popup-form',
+  data: {
+    page_count: 50,
+    pages: _.range(1, 501).map(it => ({
+      value: it,
+      text: `前${it}页`
+    })),
+    message: '',
+    message_css: 'success'
+  },
+  methods: {
+    showMessage: function(message, css) {
+      this.message = message
+      this.message_css = css
+    },
+    fetchCustomers: function() {
+      chrome.tabs.query(
+        {
+          active: true,
+          currentWindow: true
+        },
+        function(tabs) {
+          const tab = tabs[0]
+          if (tab.url.indexOf('.weibo.com/') < 0) {
+            this.showMessage('请打开<a href="https://s.weibo.com" target="_blank">微博搜索</a>页面并输入关键字搜索内容！', 'error')
+            return
+          }
 
-    'use strict';
-    
-    var $message = $('#message');
-
-    var optionHtml = '';
-    for (var i = 1; i <= 500; i++) {
-        optionHtml += '<option value="' + i + '">前' + i + '页</option>';
+          chrome.tabs.sendMessage(
+            tab.id,
+            {
+              method: 'fetchCustomers',
+              pageCount: this.page_count
+            },
+            function(response) {
+              this.showMessage('正在提取用户...', 'success')
+            }.bind(this)
+          )
+        }.bind(this)
+      )
     }
+  }
+})
 
-    var $pageCount = $('#page-count');
-    $pageCount.append(optionHtml).val('50');
-
-    var showMessage = function(message, color) {
-        $message.html(message).css({
-            color: color
-        }).show();
-
-        window.setTimeout(function() {
-            $message.hide();
-        }, 3000);
-    };
-
-    $('#get-customers').click(function() {
-        chrome.tabs.query({
-            active: true,
-            currentWindow: true
-        }, function(tabs) {
-            var tab = tabs[0];
-            if (tab.url.indexOf('.weibo.com/') < 0) {
-                showMessage('请先打开<a href="http://s.weibo.com" target="_blank">微博搜索</a>页面！', 'red');
-                return;
-            }
-
-            chrome.tabs.sendMessage(tab.id, {
-                method: 'fetchCustomers',
-                pageCount: parseInt($pageCount.val())
-            }, function(response) {
-                showMessage('正在提取用户...', 'green');
-            });
-        });
-    });
-});

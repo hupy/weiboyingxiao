@@ -1,9 +1,6 @@
 var taskService = taskService || {};
 
 (function() {
-
-    'use strict';
-
     this.restartAll = function() {
 
         chrome.alarms.clearAll();

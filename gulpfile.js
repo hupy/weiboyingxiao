@@ -1,6 +1,6 @@
 var gulp = require('gulp'),
     concat = require('gulp-concat'),
-    uglify = require('gulp-uglify'),
+    uglify = require('gulp-uglify-es').default,
     path = require('path'),
     changed = require('gulp-changed'),
     w3cjs = require('gulp-w3cjs'),
@@ -15,16 +15,16 @@ var gulp = require('gulp'),
 
 // production mode (see build task)
 var isProduction = true;
-var useSourceMaps = false;
+var useSourceMaps = true;
 
 // JS APP
 gulp.task('scripts:app', function() {
 
-    var files = ['js/app.init.js',
-        'js/modules/*.js',
-        'js/modules/controllers/*.js',
-        'js/modules/directives/*.js',
-        'js/modules/services/*.js'
+    var files = ['app/js/app.init.js',
+        'app/js/modules/*.js',
+        'app/js/modules/controllers/*.js',
+        'app/js/modules/directives/*.js',
+        'app/js/modules/services/*.js'
     ];
 
     return gulp.src(files)
@@ -32,9 +32,7 @@ gulp.task('scripts:app', function() {
         .pipe(concat('app.js'))
         .pipe(ngAnnotate())
         .on("error", handleError)
-        .pipe(isProduction ? uglify({
-            preserveComments: 'some'
-        }) : gutil.noop())
+        .pipe(isProduction ? uglify() : gutil.noop())
         .on("error", handleError)
         .pipe(gutil.noop())
         .pipe(gulp.dest('app/js'));
@@ -52,16 +50,9 @@ gulp.task('scripts:base', function() {
 gulp.task('scripts:background', function() {
 
     return gulp.src(require('./background.js.json'))
-        .pipe(isProduction ? uglify({
-            preserveComments: 'some'
-        }) : gutil.noop())
+        .pipe(isProduction ? uglify() : gutil.noop())
         .pipe(concat('background.js'))
         .pipe(gulp.dest('app/js'));
-});
-
-gulp.task('scripts:static', function() {
-    return gulp.src('js/static/*.js')
-        .pipe(gulp.dest('app/js/static'));
 });
 
 
@@ -71,11 +62,10 @@ gulp.task('scripts:static', function() {
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
-    gulp.watch('js/app.init.js', ['scripts:app']);
-    gulp.watch('js/**/*.js', ['scripts:app']);
-    gulp.watch('js/static/*.js', ['scripts:static']);
-    gulp.watch('js/background/*.js', ['scripts:background']);
-    gulp.watch('js/background/services/*.js', ['scripts:background']);
+    gulp.watch('app/js/app.init.js', ['scripts:app']);
+    gulp.watch('app/js/**/*.js', ['scripts:app']);
+    gulp.watch('app/js/background/*.js', ['scripts:background']);
+    gulp.watch('app/js/background/services/*.js', ['scripts:background']);
 });
 
 
@@ -89,8 +79,6 @@ gulp.task('prod', function() {
 gulp.task('default', gulpsync.sync([
     'scripts:base',
     'scripts:background',
-    'scripts:static',
-  //  'scripts:vendor:app',
     'scripts:app',
     'start'
 ]), function() {

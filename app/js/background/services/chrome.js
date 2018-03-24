@@ -2,8 +2,6 @@ var chromeService = chromeService || {};
 
 (function() {
 
-    'use strict';
-
     this.showNotificaton = function(message) {
         chrome.notifications.create('', {
             type: 'basic',
@@ -54,9 +52,15 @@ var chromeService = chromeService || {};
             } else if (details.url.indexOf('https://login.sina.com.cn/crossdomain2.php') !== -1) {
                 modifyHeaders(details.requestHeaders, 'Referer', 'http://www.weibo.com');
                 modifyHeaders(requestHeaders, 'Origin', 'https://login.sina.com.cn');
-            } else if (details.url.indexOf('https://passport.weibo.com/wbsso/login?ssosavestate') !== -1) {
+            } else if (details.url.indexOf('https://passport.weibo.com/wbsso/login') !== -1) {
                 modifyHeaders(details.requestHeaders, 'Referer', 'http://www.weibo.com');
                 modifyHeaders(requestHeaders, 'Origin', 'https://passport.weibo.com');
+            } else if (details.url.indexOf('https://s.weibo.com') !== -1) {
+                modifyHeaders(details.requestHeaders, 'Referer', 'https://s.weibo.com');
+                modifyHeaders(requestHeaders, 'Origin', 'https://s.weibo.com');
+            } else if (details.url.indexOf('https://weibo.com') !== -1) {
+                modifyHeaders(details.requestHeaders, 'Referer', 'https://weibo.com');
+                modifyHeaders(requestHeaders, 'Origin', 'https://weibo.com');
             }
 
             return {
@@ -64,8 +68,10 @@ var chromeService = chromeService || {};
             };
         }, {
             urls: ['http://www.weibo.com/aj*&__from=extension',
-                'https://login.sina.com.cn/*&__from=extension',
-                'https://passport.weibo.com/wbsso/login?ssosavestate*&__from=extension*'
+                'https://login.sina.com.cn/*&__from=extension*',
+                'https://s.weibo.com/*&__from=extension*',
+                'https://weibo.com/*&__from=extension*',
+                'https://passport.weibo.com/wbsso/login*&__from=extension*'
             ]
         }, ['blocking', 'requestHeaders']);
     };
@@ -76,7 +82,7 @@ var chromeService = chromeService || {};
 
             var responseHeaders = details.responseHeaders;
 
-            if (details.url.indexOf('https://passport.weibo.com/wbsso/login?ssosavestate') !== -1) {
+            if (details.url.indexOf('https://passport.weibo.com/wbsso/login') !== -1) {
 
                 // 登录最后一步获取登录Token
                 var token = '';
@@ -91,8 +97,7 @@ var chromeService = chromeService || {};
                 }
 
                 modifyHeaders(responseHeaders, 'token', token);
-
-            } else if (details.url.indexOf('https://login.sina.com.cn/sso/login.php?client=ssologin.js') !== -1) {
+            } else if (details.url.indexOf('https://login.sina.com.cn/sso/login.php') !== -1) {
 
                 var cookies = '';
                 for (var i in responseHeaders) {
@@ -125,8 +130,8 @@ var chromeService = chromeService || {};
             };
         }, {
             urls: ['http://www.weibo.com/aj*&__from=extension',
-                'https://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.18)&__from=extension',
-                'https://passport.weibo.com/wbsso/login?ssosavestate*&__from=extension*'
+                'https://login.sina.com.cn/sso/login.php*&__from=extension*',
+                'https://passport.weibo.com/wbsso/login*&__from=extension*'
             ]
         }, ['blocking', 'responseHeaders']);
     };
@@ -292,6 +297,10 @@ var chromeService = chromeService || {};
                         break;
                     case 'loginAccount':
                         accountService.login(request.account)
+                            .then(sendResponse, sendResponse);
+                        break;
+                    case 'loginCheckQrcode':
+                        accountService.checkQrcode(request.account)
                             .then(sendResponse, sendResponse);
                         break;
                 }

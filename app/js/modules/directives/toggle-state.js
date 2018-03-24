@@ -1,7 +1,4 @@
 App.directive('toggleState', function(toggleStateService) {
-
-    'use strict';
-
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {

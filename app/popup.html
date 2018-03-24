@@ -1,26 +1,34 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>微博营销助手</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/popup.css" rel="stylesheet">
-  </head>
-  <body>
-    <form role="form" class="popup-form">
-      <h1>微博营销助手 <a href="http://www.weibo.com" target="_blank"><img src="/img/weibo-logo.png"></a></h1>
-      <p class="clearfix">
-        <select class="form-control" id="page-count">
-        </select>
-        <button type="button" class="btn btn-primary" id="get-customers">提取数据</button>
-      </p>
-      <hr>
-      <p>
-        <a href="/index.html" target="_blank" class="btn btn-success">进入管理界面</a>
-      </p>
-    </form>
-    <div id="message"></div>
-    <script src="js/static/jquery.min.js"></script>
-    <script src="js/static/popup.js"></script>
-  </body>
+<head>
+  <title>微博营销助手</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/popup.css" rel="stylesheet">
+</head>
+<body>
+  <form class="popup-form">
+    <h1>微博营销助手
+      <a href="http://www.weibo.com" target="_blank">
+        <img src="/img/weibo-logo.png">
+      </a>
+    </h1>
+    <p class="clearfix">
+      <select class="form-control" v-model="page_count">
+        <option v-for="item in pages" :value="item.value">
+          {{ item.text }}
+        </option>
+      </select>
+      <button type="button" class="btn btn-primary btn-fetch" @click="fetchCustomers">提取数据</button>
+    </p>
+    <hr>
+    <p>
+      <a href="/index.html" target="_blank" class="btn btn-success btn-block">进入管理界面</a>
+    </p>
+    <div class="message" v-show="message" :class="message_css" v-html="message"></div>
+  </form>
+  <script src="js/static/lodash.js"></script>
+  <script src="js/static/vue.js"></script>
+  <script src="js/static/popup.js"></script>
+</body>
 </html>

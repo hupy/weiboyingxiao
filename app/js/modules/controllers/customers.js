@@ -75,7 +75,6 @@ App.controller('CustomersController', function($scope, toastr, $uibModal, $filte
             searchConditions: $scope.searchConditions
         }, function(response) {
             $scope.$apply(function() {
-
                 $scope.customers = response.list;
 
                 var count = response.count;

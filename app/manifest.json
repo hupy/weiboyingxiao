@@ -2,11 +2,11 @@
   "manifest_version": 2,
   "name": "微博营销助手",
   "description": "获取新浪微博营销目标用户。多个条件筛选用户，批量推送评论，批量点赞，批量转发，批量收听，批量私信。",
-  "version": "6.3",
+  "version": "6.5",
   "content_scripts": [
     {
-      "matches": ["http://*.weibo.com/*"],
-      "js": ["js/static/jquery.min.js", "js/static/content_script.js"],
+      "matches": ["*://*.weibo.com/*"],
+      "js": ["js/static/jquery.min.js", "js/static/vue.js", "js/content-scripts/index.js"],
       "css": ["css/content.css"]
     }
   ],
@@ -19,7 +19,7 @@
     "scripts": ["js/background.js"],
     "persistent": true
   },
-  "content_security_policy": "script-src 'self' https://login.sina.com.cn https://passport.weibo.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://s.weibo.com https://login.sina.com.cn https://passport.weibo.com;object-src 'self'",
   "permissions": [
     "tabs",
     "cookies",
