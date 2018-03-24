@@ -141,7 +141,7 @@ var customerService = customerService || {}
 
   this.getAll = function(searchConditions, start, pageSize) {
     var customerFilter = getCustomerFilter(searchConditions)
-    var customers = db.customers.toCollection().and(customerFilter)
+    var customers = db.customers.toCollection().and(customerFilter).desc()
 
     var count = customers.count()
     customers = customers
