@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "A Chrome extension you can use to broadcast your information to Sina Weibo users by executing some tasks.",
   "main": "gulpfile.js",
+  "scripts": {
+    "dev": "./node_modules/.bin/gulp dev",
+    "build": "./node_modules/.bin/gulp build"
+  },
   "dependencies": {
     "angular": "^1.5.8",
     "angular-animate": "^1.5.8",
@@ -23,19 +27,11 @@
     "oclazyload": "^1.0.9"
   },
   "devDependencies": {
-    "gulp": "^3.8.11",
-    "gulp-changed": "^1.2.1",
-    "gulp-concat": "^2.5.2",
-    "gulp-expect-file": "^0.0.7",
-    "gulp-filter": "^2.0.2",
-    "gulp-ng-annotate": "^0.5.2",
-    "gulp-rename": "^1.2.0",
-    "gulp-sourcemaps": "^1.5.1",
-    "gulp-sync": "^0.1.4",
-    "gulp-uglify-es": "^1.0.1",
-    "gulp-util": "^3.0.4",
-    "gulp-w3cjs": "^0.3.0",
-    "through2": "^0.6.3"
+    "gulp": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-ng-annotate": "^2.1.0",
+    "gulp-uglify-es": "^1.0.4",
+    "through2": "^3.0.0"
   },
   "repository": {
     "type": "git",

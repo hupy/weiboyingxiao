@@ -5,7 +5,13 @@ A Chrome extension you can use to broadcast your information to Sina Weibo users
 
 ```sh
 yarn
-./node_modules/.bin/gulp
+yarn dev
+```
+
+## Run
+
+```sh
+yarn build
 ```
 
 ## Screenshots
@@ -13,4 +19,3 @@ yarn
 ![Customers screenshot](/screenshots/customers.png)
 ![Tasks screenshot](/screenshots/tasks.png)
 ![Accounts screenshot](/screenshots/accounts.png)
-

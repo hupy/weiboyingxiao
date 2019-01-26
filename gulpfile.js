@@ -1,95 +1,73 @@
-var gulp = require('gulp'),
-    concat = require('gulp-concat'),
+const {
+    src,
+    dest,
+    series,
+    watch
+} = require('gulp')
+
+const concat = require('gulp-concat'),
     uglify = require('gulp-uglify-es').default,
-    gutil = require('gulp-util'),
-    gulpsync = require('gulp-sync')(gulp),
+    through2 = require('through2'),
     ngAnnotate = require('gulp-ng-annotate')
 
-// production mode (see build task)
-var isProduction = false;
+let isProduction = false;
 
-// JS APP
-gulp.task('scripts:app', function() {
+const handleError = err => {
+    console.log(err.toString())
+    this.emit('end')
+}
 
-    var files = ['app/js/app.init.js',
-        'app/js/modules/*.js',
-        'app/js/modules/controllers/*.js',
-        'app/js/modules/directives/*.js',
-        'app/js/modules/services/*.js'
-    ];
-
-    return gulp.src(files)
-        .pipe(gutil.noop())
+const buildAppJs = cb => {
+    src(['app/js/app.init.js',
+            'app/js/modules/*.js',
+            'app/js/modules/controllers/*.js',
+            'app/js/modules/directives/*.js',
+            'app/js/modules/services/*.js'
+        ])
         .pipe(concat('app.js'))
         .pipe(ngAnnotate())
         .on("error", handleError)
-        .pipe(isProduction ? uglify() : gutil.noop())
+        .pipe(isProduction ? uglify() : through2.obj())
         .on("error", handleError)
-        .pipe(gutil.noop())
-        .pipe(gulp.dest('app/js'));
-});
+        .pipe(dest('app/js'))
+    cb()
+}
 
-
-gulp.task('scripts:base', function() {
-
-    return gulp.src(require('./base.js.json'))
+const buildBaseJs = cb => {
+    src(require('./base.js.json'))
         .pipe(uglify())
         .pipe(concat('base.js'))
-        .pipe(gulp.dest('app/js'));
-});
+        .pipe(dest('app/js'))
+    cb()
+}
 
-gulp.task('scripts:background', function() {
-
-    return gulp.src(require('./background.js.json'))
-        .pipe(isProduction ? uglify() : gutil.noop())
+const buildBackgroundJs = cb => {
+    src(require('./background.js.json'))
+        .pipe(isProduction ? uglify() : through2.obj())
         .pipe(concat('background.js'))
-        .pipe(gulp.dest('app/js'));
-});
-
-
-//---------------
-// WATCH
-//---------------
+        .pipe(dest('app/js'))
+    cb()
+}
 
 // Rerun the task when a file changes
-gulp.task('watch', function() {
-    gulp.watch('app/js/app.init.js', ['scripts:app']);
-    gulp.watch('app/js/**/*.js', ['scripts:app']);
-    gulp.watch('app/js/background/*.js', ['scripts:background']);
-    gulp.watch('app/js/background/services/*.js', ['scripts:background']);
-});
+const watchJs = cb => {
+    watch(['app/js/app.init.js', 'app/js/**/*.js'], cb => {
+        buildAppJs(() => {})
+        // cb()
+    })
 
+    watch(['app/js/background/*.js', 'app/js/background/services/*.js'], cb => {
+        buildBackgroundJs(() => {})
+        // cb()
+    })
 
-// build for production (minify)
-gulp.task('build', ['prod', 'default']);
-gulp.task('prod', function() {
-    isProduction = true;
-});
-
-// default (no minify)
-gulp.task('default', gulpsync.sync([
-    'scripts:base',
-    'scripts:background',
-    'scripts:app',
-    'start'
-]), function() {
-
-    gutil.log(gutil.colors.cyan('************'));
-    gutil.log(gutil.colors.cyan('* All Done *'), 'You can start editing your code, LiveReload will update your browser after any change..');
-    gutil.log(gutil.colors.cyan('************'));
-
-});
-
-gulp.task('start', [
-    'watch'
-]);
-
-gulp.task('done', function() {
-    console.log('All Done!! You can start editing your code, LiveReload will update your browser after any change..');
-});
-
-// Error handler
-function handleError(err) {
-    console.log(err.toString());
-    this.emit('end');
+    cb()
 }
+
+const build = cb => {
+    isProduction = true
+    cb()
+}
+
+exports.dev = series(buildBaseJs, buildBackgroundJs, buildAppJs, watchJs)
+exports.build = series(build, buildBaseJs, buildBackgroundJs, buildAppJs)
