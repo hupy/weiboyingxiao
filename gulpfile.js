@@ -1,21 +1,12 @@
 var gulp = require('gulp'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify-es').default,
-    path = require('path'),
-    changed = require('gulp-changed'),
-    w3cjs = require('gulp-w3cjs'),
-    rename = require('gulp-rename'),
-    through = require('through2'),
     gutil = require('gulp-util'),
-    gulpFilter = require('gulp-filter'),
-    expect = require('gulp-expect-file'),
     gulpsync = require('gulp-sync')(gulp),
-    ngAnnotate = require('gulp-ng-annotate'),
-    PluginError = gutil.PluginError;
+    ngAnnotate = require('gulp-ng-annotate')
 
 // production mode (see build task)
-var isProduction = true;
-var useSourceMaps = true;
+var isProduction = false;
 
 // JS APP
 gulp.task('scripts:app', function() {

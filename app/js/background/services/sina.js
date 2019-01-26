@@ -199,7 +199,7 @@ let sinaService
   class SinaService {
     praise(task, userId, token) {
       return postData(
-        'https://s.weibo.com/ajax/mblog/like/add?__rnd=' + Date.now(),
+        'https://weibo.com/aj/v6/like/add?ajwvr=6&__rnd=' + Date.now(),
         {
           location: '',
           mid: task.statusId
@@ -269,7 +269,7 @@ let sinaService
     comment(task, userId, token) {
       var content = task.useRandomContent ? getRandomContent() : task.content
       return postData(
-        'https://weibo.com/aj/v6/comment/add?__rnd=' + Date.now(),
+        'https://weibo.com/aj/v6/comment/add?ajwvr=6&__rnd=' + Date.now(),
         {
           act: 'post',
           forward: 0,

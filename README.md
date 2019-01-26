@@ -4,7 +4,7 @@ A Chrome extension you can use to broadcast your information to Sina Weibo users
 ## Run
 
 ```sh
-npm i
+yarn
 ./node_modules/.bin/gulp
 ```
 

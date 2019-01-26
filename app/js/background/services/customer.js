@@ -36,7 +36,7 @@ var customerService = customerService || {}
 
   var containsFilters = function(input, keywords) {
     var splitted = keywords.toLowerCase().split(' ')
-    input = input.toLowerCase()
+    input = (input || '').toLowerCase()
     for (var i in splitted) {
       if (input.indexOf(splitted[i]) !== -1) {
         return true

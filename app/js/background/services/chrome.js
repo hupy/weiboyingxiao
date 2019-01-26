@@ -177,6 +177,9 @@ var chromeService = chromeService || {};
                     case 'getCustomers':
                         customerService.getAll(request.searchConditions, request.start, request.pageSize)
                             .then(function(data) {
+                                data.list.forEach(it => {
+                                    it.createdAt = new Date(it.createdAt).toLocaleString()
+                                })
                                 sendResponse(data);
                             });
                         break;
@@ -199,6 +202,9 @@ var chromeService = chromeService || {};
                                 searchConditions.taskStatus,
                                 request.start, request.pageSize)
                             .then(function(data) {
+                                data.list.forEach(it => {
+                                    it.createdAt = new Date(it.createdAt).toLocaleString()
+                                })
                                 sendResponse(data);
                             });
                         break;

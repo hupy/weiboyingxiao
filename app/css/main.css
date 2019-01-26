@@ -253,3 +253,8 @@ textarea.form-control {
         width: 1280px;
     }
 }
+
+.face {
+    width: 18px;
+    height: 18px;
+}

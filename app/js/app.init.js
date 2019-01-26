@@ -5,6 +5,7 @@ var App = angular.module('weiboMarketing', ['ngAnimate', 'ngStorage', 'ngSanitiz
     '$compileProvider',
     function($compileProvider) {
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|chrome-extension):/);
     }
 ])
 .run(['$rootScope', '$state', '$stateParams', '$window', 'editableOptions', function($rootScope, $state, $stateParams, $window, editableOptions) {
@@ -17,7 +18,7 @@ var App = angular.module('weiboMarketing', ['ngAnimate', 'ngStorage', 'ngSanitiz
     $rootScope.$storage = $window.localStorage;
 
     // Scope Globals
-    // ----------------------------------- 
+    // -----------------------------------
     $rootScope.app = {
         name: '微博营销助手',
         description: '获取新浪微博营销目标用户。多个条件筛选用户，批量推送评论，批量点赞，批量转发，批量收听。',

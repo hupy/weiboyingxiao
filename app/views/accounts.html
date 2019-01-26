@@ -65,23 +65,23 @@
                             <li>
                                 <label>点赞：</label>
                                 <a href="#" editable-number="account.praiseCount" onbeforesave="taskCount('praise', $data, account.id)">
-                            {{ account.praiseCount || 29 }}</a>
+                            {{ account.praiseCount || 29 }}次/天</a>
                                 <label>评论：</label>
                                 <a href="#" editable-number="account.commentCount" onbeforesave="taskCount('comment', $data, account.id)">
-                            {{ account.commentCount || 29 }}</a>
+                            {{ account.commentCount || 29 }}次/天</a>
                             </li>
                             <li>
                                 <label>转发：</label>
                                 <a href="#" editable-number="account.forwardCount" onbeforesave="taskCount('forward', $data, account.id)">
-                            {{ account.forwardCount || 29 }}</a>
+                            {{ account.forwardCount || 29 }}次/天</a>
                                 <label>收听：</label>
                                 <a href="#" editable-number="account.followCount" onbeforesave="taskCount('follow', $data, account.id)">
-                            {{ account.followCount || 29 }}</a>
+                            {{ account.followCount || 29 }}次/天</a>
                             </li>
                             <li>
                                 <label>私信：</label>
                                 <a href="#" editable-number="account.messageCount" onbeforesave="taskCount('message', $data, account.id)">
-                            {{ account.messageCount || 29 }}</a>
+                            {{ account.messageCount || 29 }}次/天</a>
                             </li>
                         </ul>
                         <a href="#" ng-click="showTaskLog(account)">任务执行情况</a>

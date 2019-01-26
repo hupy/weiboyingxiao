@@ -14,85 +14,36 @@ const getPageNumber = () => {
   return 1
 }
 
-var getAttitudesCount = function($feed) {
-  var attitudesCount = 0
-  var attitudesCountText = $feed.find('a[action-type="feed_list_like"] em').text()
-  if (attitudesCountText != '') {
-    attitudesCount = parseInt(attitudesCountText)
-  } else {
-    attitudesCountText = $feed.find('span[node-type="like_status"] em').text()
-    if (attitudesCountText != '') {
-      attitudesCount = parseInt(attitudesCountText)
-    }
-  }
-
-  return attitudesCount
+const getAttitudesCount = function($feed) {
+  return parseInt($feed.find('> .card-act a[action-type="feed_list_like"] em').text().trim()) || 0
 }
 
-var getCommentsCount = function($feed) {
-  var commentsCount = 0
-  var commentsCountText = $feed.find('a[action-type="feed_list_comment"] em').text()
-  if (commentsCountText != '') {
-    commentsCount = parseInt(commentsCountText)
-  } else {
-    commentsCountText = $feed
-      .find('span[node-type="comment_btn_text"]')
-      .text()
-      .replace('评论', '')
-      .trim()
-    if (commentsCountText != '') {
-      commentsCount = parseInt(commentsCountText)
-    }
-  }
-
-  return commentsCount
+const getCommentsCount = function($feed) {
+  return parseInt($feed.find('> .card-act a[action-type="feed_list_comment"]').text().replace('评论', '').trim()) || 0
 }
 
-var getRepostsCount = function($feed) {
-  var repostsCount = 0
-  var repostsCountText = $feed.find('a[action-type="feed_list_forward"] em').text()
-  if (repostsCountText != '') {
-    repostsCount = parseInt(repostsCountText)
-  } else {
-    repostsCountText = $feed
-      .find('span[node-type="forward_btn_text"]')
-      .text()
-      .replace('转发', '')
-      .trim()
-    if (repostsCountText != '') {
-      repostsCount = parseInt(repostsCountText)
-    }
-  }
-
-  return repostsCount
+const getRepostsCount = function($feed) {
+  return parseInt($feed.find('> .card-act a[action-type="feed_list_forward"] em').text().replace('转发', '').trim()) || 0
 }
 
-var getProfileUrl = function($feed) {
-  return 'https:' + $feed.find('.W_fb').attr('href')
+const getProfileUrl = function($feed) {
+  return 'https:' + $feed.find('.content > .info .name').attr('href')
 }
 
-var getUserId = function($feed) {
-  var usercard = $feed.find('.face img').attr('usercard')
-  var userId = 0
-  if (usercard.indexOf('&') != -1) {
-    userId = usercard.substring(3, usercard.indexOf('&'))
-  } else {
-    userId = usercard.substring(3)
-  }
-
-  return userId
+const getUserId = function($feed) {
+  return $feed.find('.content > .info .name').attr('href').match(/([\d]+)/)[0]
 }
 
-var getStatusLink = function($from) {
-  return 'https:' + $from.find('a').attr('href')
+const getStatusLink = function($from) {
+  return 'https:' + $from.find('a').eq(0).attr('href')
 }
 
-var getCustomersInNextPage = function() {
+const getCustomersInNextPage = function() {
   var pageCount = parseInt(sessionStorage.getItem('page_count'))
 
   var pageNumber = getPageNumber()
-  if (pageNumber < pageCount && $('.page.next').length > 0) {
-    window.location.href = $('.page.next').attr('href')
+  if (pageNumber < pageCount && $('.m-page .next').length > 0) {
+    window.location.href = $('.m-page .next').attr('href')
   } else {
     sessionStorage.setItem('page_count', null)
     $('#wbyx-loading').hide()
@@ -106,7 +57,7 @@ var getCustomersInNextPage = function() {
   }
 }
 
-var getProfileCustomer = function($feedList, index) {
+const getProfileCustomer = function($feedList, index) {
   if (window.cancelGetCustomers) {
     return
   }
@@ -136,7 +87,7 @@ var getProfileCustomer = function($feedList, index) {
   var profileImageUrl = 'https:' + $('.pf_photo .photo').attr('src')
 
   var screenName = $feed.find('[node-type="feed_list_content"]').attr('nick-name')
-  var content = $feed
+  let content = $feed
     .find('[node-type="feed_list_content"]')
     .html()
     .replace(/(<img\ssrc=")(.*?)("\s?>)/g, '$1https:$2$3')
@@ -261,17 +212,56 @@ var getCustomer = function($feedList, keywords, index) {
 
   var url = getProfileUrl($feed)
 
-  var profileImageUrl = 'https:' + $feed.find('.face img').attr('src')
+  var profileImageUrl = 'https:' + $feed.find('> .card-feed > .avator img').attr('src')
   var userId = getUserId($feed)
 
-  var screenName = $feed.find('.W_fb').attr('title')
-  var content = $feed.find('[node-type="feed_list_content"]').html().replace(/(<img\ssrc=")(.*?)("\s?>)/g, '$1https:$2$3')
+  var screenName = $feed.find('> .card-feed .content > .info .name').text().trim()
+  let $feedContent = $feed.find('> .card-feed .content .txt[node-type="feed_list_content_full"]')
+  if ($feedContent.length > 0) {
+      $feedContent.find('a[action-type="fl_fold"]').remove()
+  } else {
+      $feedContent = $feed.find('> .card-feed .content .txt[node-type="feed_list_content"]')
+  }
 
-  var $from = $feed.find('.WB_feed_detail .feed_from').last('a')
+  $feedContent.find('.wbicon').remove()
 
-  var statusId = $feed.find('div[action-type="feed_list_item"]').attr('mid')
+  let content = $feedContent.html()
+    .replace(/(<img\ssrc=")(.*?)("\s?>)/g, '$1https:$2$3')
+    .replace(/(<a\shref="\/)(.*?)("\s?>)/g, '<a href="https://s.weibo.com/$2$3')
 
-  var createdAt = $from.find('a').attr('title')
+  var $from = $feed.find('> .card-feed .content .from').last('a')
+
+  var statusId = $feed.parent().attr('mid')
+
+  var createdAt = $from.find('a').eq(0).text().trim()
+  var now = new Date()
+  var year = now.getFullYear()
+  if (createdAt.indexOf('今天') !== -1) {
+    var month = now.getMonth() + 1
+    if (month < 10) {
+      month = '0' + month
+    }
+    var day = now.getDate()
+    if (day < 10) {
+      day = '0' + day
+    }
+    createdAt = new Date(`${year}-${month}-${day}T${createdAt.replace('今天', '')}:00+08:00`).toISOString()
+  } else if (createdAt.indexOf('秒前') !== -1) {
+    now.setSeconds(now.getSeconds() + parseInt(createdAt.replace('秒前', '')))
+    createdAt = now.toISOString()
+  } else if (createdAt.indexOf('分钟前') !== -1) {
+    now.setMinutes(now.getMinutes() + parseInt(createdAt.replace('分钟前', '')))
+    createdAt = now.toISOString()
+  } else {
+    createdAt = createdAt.replace('月', '-').replace('日 ', 'T')
+    if (createdAt.indexOf('年') !== -1) {
+      createdAt = createdAt.replace('年', '-')
+      createdAt = new Date(`${createdAt}:00+08:00`).toISOString()
+    } else {
+      createdAt = new Date(`${year}-${createdAt}:00+08:00`).toISOString()
+    }
+  }
+
   var source = $from.find('a').eq(1).text()
 
   var statusLink = getStatusLink($from)
@@ -280,7 +270,7 @@ var getCustomer = function($feedList, keywords, index) {
   var commentsCount = getCommentsCount($feed)
   var repostsCount = getRepostsCount($feed)
 
-  var verified = $feed.find('.approve').length > 0 || $feed.find('.approve_co').length > 0
+  var verified = $feed.find('> .content > .info .icon-vip').length > 0
 
   var getDetailUrl = 'https://weibo.com/aj/user/newcard?id=' + userId
   var xhr = new XMLHttpRequest()
@@ -431,7 +421,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var pageNumber = getPageNumber()
     var $feedList = getFeedList()
 
-    var keywords = $('.searchInp_form').val()
+    var keywords = $('.search-input input:text').val()
     getCustomersFromPage($feedList, pageNumber, request.pageCount, keywords)
 
     return true
@@ -450,17 +440,7 @@ const checkPageListBeforeGetCustomers = function(pageNumber, pageCount, keywords
 }
 
 const getFeedList = function() {
-  $('.WB_cardwrap:visible').each(function() {
-    if (
-      $(this)
-        .html()
-        .trim() === ''
-    ) {
-      $(this).remove()
-    }
-  })
-
-  return $('div[node-type="feed_list"] .WB_cardwrap:visible').not('.WB_notes')
+  return $('.m-con-l .card-wrap[mid] .card')
 }
 
 $(function() {
@@ -488,7 +468,7 @@ $(function() {
     const pageCount = parseInt(pageCountValue)
     const pageNumber = getPageNumber()
     if (pageNumber >= 1 && pageCount >= pageNumber) {
-      const keywords = $('.searchInp_form').val()
+      const keywords = $('.search-input input:text').val()
       checkPageListBeforeGetCustomers(pageNumber, pageCount, keywords)
     }
   }
