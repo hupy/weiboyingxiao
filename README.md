@@ -8,7 +8,7 @@ yarn
 yarn dev
 ```
 
-## Run
+## Build
 
 ```sh
 yarn build
