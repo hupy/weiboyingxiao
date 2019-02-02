@@ -249,6 +249,9 @@ var getCustomer = function($feedList, keywords, index) {
   } else if (createdAt.indexOf('秒前') !== -1) {
     now.setSeconds(now.getSeconds() + parseInt(createdAt.replace('秒前', '')))
     createdAt = now.toISOString()
+  } else if (createdAt.indexOf('秒 ') !== -1) {
+    now.setSeconds(now.getSeconds() + parseInt(createdAt.split(' ')[0].replace('秒 ', '')))
+    createdAt = now.toISOString()
   } else if (createdAt.indexOf('分钟前') !== -1) {
     now.setMinutes(now.getMinutes() + parseInt(createdAt.replace('分钟前', '')))
     createdAt = now.toISOString()
