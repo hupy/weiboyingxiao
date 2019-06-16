@@ -53,7 +53,7 @@ App.config(function(
     })
     .state('app.donation', {
       url: '/donation',
-      title: '打赏',
+      title: '技术支持',
       templateUrl: 'views/donation.html'
     })
 }).controller('NullController', function() {})

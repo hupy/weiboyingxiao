@@ -13,7 +13,7 @@ App.controller('NavigationController', function($rootScope, $scope, $state) {
       sref: 'app.accounts'
     },
     {
-      text: '打赏',
+      text: '技术支持',
       sref: 'app.donation'
     }
   ]

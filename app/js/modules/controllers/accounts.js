@@ -199,6 +199,9 @@ App.controller('AccountsController', function($scope, toastr, $uibModal) {
   }
 
   $scope.loginAccount = function(index, account) {
+    toastr.error('抱歉，自动登录功能已经无法使用。')
+    return
+
     $.Utils.showSpinner()
 
     chrome.runtime.sendMessage(
