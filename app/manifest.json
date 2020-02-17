@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "微博营销助手",
   "description": "获取新浪微博营销目标用户。多个条件筛选用户，批量推送评论，批量点赞，批量转发，批量收听，批量私信。",
-  "version": "6.9.6",
+  "version": "6.9.7",
   "content_scripts": [
     {
       "matches": ["*://*.weibo.com/*"],
